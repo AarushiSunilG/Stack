@@ -1,0 +1,40 @@
+// 1209. Remove All Adjacent Duplicates in String II
+
+// https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/
+
+class Solution {
+    public String removeDuplicates(String s, int k) {
+        
+        Stack<Pair> stk = new Stack<>();
+                
+        for(int i=0; i<s.length(); i++){
+            char c=s.charAt(i);
+            if(!stk.isEmpty()){
+                char sc =(char)(stk.peek()).getKey();
+                int sval=(int)stk.peek().getValue();
+                if(sc==c){
+                    stk.pop();
+                    if(k-sval!=1 ){
+                        Pair<Character,Integer> p = new Pair(sc, sval+1);
+                        stk.push(p);
+                    }
+                }else{
+                    stk.push(new Pair(c,1));
+                }
+            }else{
+               stk.push(new Pair(c,1));
+            }
+        }
+        
+        StringBuffer sb = new StringBuffer();
+        while(!stk.isEmpty()){
+            Pair<Character,Integer> p = stk.pop();
+            int freq= (int)p.getValue();
+            while(freq-- > 0){
+                sb.append(p.getKey());
+            }
+        }
+        
+        return sb.reverse().toString();
+    }
+}
