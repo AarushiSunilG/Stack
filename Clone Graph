@@ -1,0 +1,81 @@
+// https://leetcode.com/problems/clone-graph/
+
+/*
+Given a reference of a node in a connected undirected graph.
+
+Return a deep copy (clone) of the graph.
+
+Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
+
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}
+*/
+
+//## DFS
+//## add back parent in the neighbor's neighbor list too.
+//### Maintain the Visited Node in separate Array or Data Structure to add it in case it should be in neighbor list of any node.
+
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> neighbors;
+    public Node() {
+        val = 0;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val) {
+        val = _val;
+        neighbors = new ArrayList<Node>();
+    }
+    public Node(int _val, ArrayList<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+class Solution {
+    public Node cloneGraph(Node node) {
+        if(node==null){
+            return null;
+        }
+        if(node.val==0){
+            return new Node();
+        }
+        
+        Node[] mark = new Node[101];
+        
+        Node cloned = new Node(node.val);
+        mark[node.val]=cloned;
+        
+        for(Node n : node.neighbors){
+            if(mark[n.val]==null){
+                dfs(cloned, n, mark);
+            }else{
+                cloned.neighbors.add(mark[n.val]);
+            }
+        }
+        
+        
+        return cloned;
+    }
+    
+    private void dfs(Node cl, Node n, Node[] mark){
+        int val= n.val;
+        if(mark[val]==null){
+            Node temp = new Node(val);
+            cl.neighbors.add(temp);
+            mark[val]=temp;
+            for(Node node : n.neighbors){
+                dfs(temp,node,mark);
+            }
+        }else{
+            cl.neighbors.add(mark[val]);
+            
+        }
+    }
+}
+
