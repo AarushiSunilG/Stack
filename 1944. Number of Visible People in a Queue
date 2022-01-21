@@ -1,0 +1,46 @@
+/*
+https://leetcode.com/problems/number-of-visible-people-in-a-queue/
+
+1944. Number of Visible People in a Queue
+There are n people standing in a queue, and they numbered from 0 to n - 1 in left to right order.
+You are given an array heights of distinct integers where heights[i] represents the height of the ith person.
+A person can see another person to their right in the queue if everybody in between is shorter than both of them. 
+More formally, the ith person can see the jth person if i < j and min(heights[i], heights[j]) > max(heights[i+1], heights[i+2], ..., heights[j-1]).
+Return an array answer of length n where answer[i] is the number of people the ith person can see to their right in the queue.
+*/
+
+
+// ## consider case : [3,1,5,8,6]
+// ## pay attention to the count.
+
+class Solution {
+    public int[] canSeePersonsCount(int[] heights) {
+        int len = heights.length;
+        int[] res = new int[len];
+        
+        
+        Stack<Integer> stk = new Stack<>();
+        
+        for(int i=len-1; i>=0;i--){
+            if(stk.isEmpty()){
+                stk.push(heights[i]);
+                res[i]=0;
+            }else{
+                if(stk.peek()>heights[i]){
+                    res[i]=1;
+                    stk.push(heights[i]);
+                }else{
+                   int count=0;
+                   while(!stk.isEmpty() && stk.peek()<heights[i] ) {
+                       stk.pop();
+                       count++;
+                   }
+                   res[i]=(stk.isEmpty()) ? count : count+1; 
+                   stk.push(heights[i]);
+                    
+                }
+            }
+        }
+       return res; 
+    }
+}
