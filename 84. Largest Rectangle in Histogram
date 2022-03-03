@@ -1,0 +1,72 @@
+// https://leetcode.com/problems/largest-rectangle-in-histogram/
+
+// Given an array of integers heights representing the histogram's bar height where the width of each bar is 1,
+// return the area of the largest rectangle in the histogram.
+
+// APPROACH -> 1 -> using stack. Space complexity increases as we are using Stack. this is handled in APPROACH-2. 
+
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> stk = new Stack<>();
+        stk.push(-1);
+        
+        int len = heights.length;
+        int res =Integer.MIN_VALUE;
+        
+        for( int i =0; i<len ; i++){
+            if(stk.peek()!=-1 && heights[stk.peek()]>heights[i]){
+                while(stk.peek()!=-1 && heights[stk.peek()]>heights[i]){
+                    int h =  heights[stk.pop()];
+                    int w =  i-stk.peek()-1;
+                    
+                    res = Math.max(res, h*w);
+
+                }
+            }
+            stk.push(i);
+
+        }
+        
+        while(stk.peek() != -1){
+          int h =  heights[stk.pop()];
+          int w =  len-stk.peek()-1;              
+          res = Math.max(res, h*w);
+        }
+        
+        return res;
+    }
+}
+
+
+
+//APPROACH -> 2 . Using int[]
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int len = heights.length;
+
+        int[] stk = new int[len];
+        int sindex=0;
+        
+        int res =Integer.MIN_VALUE;
+        
+        for( int i =0; i<len ; i++){
+            while(sindex!=0 && heights[stk[sindex-1]]>heights[i]){
+                int h =  heights[stk[sindex-1]];
+                sindex--;
+                int w = (sindex-1>=0) ? i-stk[sindex-1]-1 : i;                
+                res = Math.max(res, h*w);
+            }
+            stk[sindex++]=i;
+        }
+
+        
+        while(sindex -1  >= 0){
+            int h =  heights[stk[sindex-1]];
+            sindex--;
+            int w =  (sindex-1>=0) ? len-stk[sindex-1]-1 : len;
+            res = Math.max(res, h*w);
+        }
+        
+        return res;
+    }
+}
